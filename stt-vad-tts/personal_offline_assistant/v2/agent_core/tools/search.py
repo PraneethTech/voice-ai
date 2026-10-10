@@ -1,24 +1,42 @@
-"""Web search via DuckDuckGo Lite — no API key. Online lookup tool."""
+"""Web search via Tavily — needs TAVILY_API_KEY. Online lookup tool."""
 from __future__ import annotations
 
-import re
+import json
+import os
 
-import httpx
+from dotenv import load_dotenv
+from tavily import TavilyClient
 
-_LITE = "https://lite.duckduckgo.com/lite/"
-_TAG = re.compile(r"<[^>]+>")
+load_dotenv()
+
+TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
+
+tavily_client = TavilyClient(api_key=TAVILY_API_KEY) if TAVILY_API_KEY else None
 
 
-def web_search(query: str, max_results: int = 3) -> str:
-    with httpx.Client(timeout=10, follow_redirects=True,
-                      headers={"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) tobi-offline-demo"}) as client:
-        resp = client.post(_LITE, data={"q": query})
-        resp.raise_for_status()
-    rows = re.findall(r'<a rel="nofollow" href="([^"]+)"[^>]*>(.*?)</a>', resp.text)
-    out = []
-    for url, title in rows[:max_results]:
-        title = _TAG.sub("", title).strip()
-        if title:
-            out.append(f"- {title} ({url})")
-    return ("Top results for that:\n" + "\n".join(out)) if out else \
-        "I searched but found nothing useful for that."
+def web_search(query: str) -> str:
+    """Search the web for information, facts, and recent news."""
+
+    if tavily_client is None:
+        return "Set the TAVILY_API_KEY environment variable."
+
+    try:
+        response = tavily_client.search(
+            query=query,
+            max_results=5,
+            search_depth="basic",
+        )
+
+        results = [
+            {
+                "title": item.get("title", ""),
+                "url": item.get("url", ""),
+                "content": item.get("content", ""),
+            }
+            for item in response.get("results", [])
+        ]
+
+        return json.dumps(results, ensure_ascii=False)
+
+    except Exception as exc:  # noqa: BLE001 — a failed lookup is reported, not raised
+        return f"Web search error: {exc}"

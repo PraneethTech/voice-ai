@@ -30,7 +30,7 @@ store: { path: data/transcripts.db }
 tools:
   weather: { enabled: true }
   search: { enabled: true, max_results: 3 }
-  telegram: { enabled: true, token_env: TOBI_TG_TOKEN, chat_id_env: TOBI_TG_CHAT }
+  telegram: { enabled: true, token_env: TELEGRAM_BOT_TOKEN, username_env: TELEGRAM_USERNAME }
 meeting:
   diarize:
     segmentation: models/diarize/segmentation.onnx

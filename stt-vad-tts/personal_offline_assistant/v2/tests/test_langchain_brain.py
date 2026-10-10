@@ -70,11 +70,11 @@ def test_langchain_brain_imports_and_has_five_tools(tmp_path, monkeypatch) -> No
     # Patch ChatOpenAI so no real LLM is needed during construction
     import unittest.mock as mock
     with mock.patch("agent_core.brain.langchain_brain.ChatOpenAI") as mock_llm, \
-         mock.patch("agent_core.brain.langchain_brain.create_react_agent") as mock_agent, \
+         mock.patch("agent_core.brain.langchain_brain.create_agent") as mock_agent, \
          mock.patch("agent_core.brain.langchain_brain.SqliteSaver") as mock_saver:
         mock_saver.return_value.setup.return_value = None
         mock_agent.return_value = mock.MagicMock()
-        brain = LangChainBrain(model="stub", base_url="http://localhost:9999/v1")
+        brain = LangChainBrain()
         assert len(brain._tools) == 5
 
 
@@ -86,7 +86,7 @@ def test_recall_tool_offline_no_store(tmp_path, monkeypatch) -> None:
     from agent_core.brain.langchain_brain import LangChainBrain
 
     with mock.patch("agent_core.brain.langchain_brain.ChatOpenAI"), \
-         mock.patch("agent_core.brain.langchain_brain.create_react_agent"), \
+         mock.patch("agent_core.brain.langchain_brain.create_agent"), \
          mock.patch("agent_core.brain.langchain_brain.SqliteSaver") as mock_saver:
         mock_saver.return_value.setup.return_value = None
         brain = LangChainBrain(store=None)
@@ -107,7 +107,7 @@ def test_internet_tool_offline(tmp_path, monkeypatch) -> None:
     import unittest.mock as mock
     from agent_core.brain.langchain_brain import LangChainBrain
     with mock.patch("agent_core.brain.langchain_brain.ChatOpenAI"), \
-         mock.patch("agent_core.brain.langchain_brain.create_react_agent"), \
+         mock.patch("agent_core.brain.langchain_brain.create_agent"), \
          mock.patch("agent_core.brain.langchain_brain.SqliteSaver") as mock_saver:
         mock_saver.return_value.setup.return_value = None
         brain = LangChainBrain()
@@ -127,7 +127,7 @@ def test_offline_time_tool_always_works(tmp_path, monkeypatch) -> None:
     import unittest.mock as mock
     from agent_core.brain.langchain_brain import LangChainBrain
     with mock.patch("agent_core.brain.langchain_brain.ChatOpenAI"), \
-         mock.patch("agent_core.brain.langchain_brain.create_react_agent"), \
+         mock.patch("agent_core.brain.langchain_brain.create_agent"), \
          mock.patch("agent_core.brain.langchain_brain.SqliteSaver") as mock_saver:
         mock_saver.return_value.setup.return_value = None
         brain = LangChainBrain()

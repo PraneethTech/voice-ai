@@ -32,6 +32,7 @@ sys.path.insert(0, str(ROOT))
 
 from agent_core.audio import AudioDeviceEngine
 from agent_core.brain.groq import GroqBrain
+from agent_core.brain.langchain_brain import LangChainBrain
 from agent_core.brain.stub import StubBrain
 from agent_core.config import Config, load
 from agent_core.debuglog import SessionLog
@@ -46,6 +47,9 @@ from agent_core.turn import SmartTurn
 
 
 def make_brain(cfg: Config, router: ToolRouter, store: Store, embedder: Embedder):
+    if cfg.brain.type == "langchain":
+        print("[brain] Using LangChainBrain")
+        return LangChainBrain(memory_db=cfg.brain.memory_db, store=store)
     if cfg.brain.type == "groq":
         brain = GroqBrain(
             api_key_env=cfg.brain.api_key_env,

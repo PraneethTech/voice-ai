@@ -118,7 +118,7 @@ class SearchCfg:
 class TelegramCfg:
     enabled: bool
     token_env: str
-    chat_id_env: str
+    username_env: str
 
 
 @dataclass(frozen=True)

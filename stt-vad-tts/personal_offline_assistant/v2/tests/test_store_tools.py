@@ -61,7 +61,7 @@ def test_stub_brain_routes_tools(store: Store) -> None:
     # Unknown tool query stays offline (search disabled flag keeps it deterministic? enabled).
     # Weather with a bogus place returns a spoken failure, not an exception.
     wx = asyncio.run(get_reply("what is the weather in NotARealPlace123"))
-    assert "could not find" in wx or "weather" in wx
+    assert "not found" in wx.lower() or "weather" in wx.lower()
 
 
 def test_groq_brain_messages_and_fallback(store: Store) -> None:

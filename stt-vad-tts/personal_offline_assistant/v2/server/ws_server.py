@@ -18,6 +18,7 @@ sys.path.insert(0, str(ROOT))
 import agent_core  # noqa: F401,E402 — offline env guards first
 from agent_core.brain.base import Brain  # noqa: E402
 from agent_core.brain.groq import GroqBrain  # noqa: E402
+from agent_core.brain.langchain_brain import LangChainBrain  # noqa: E402
 from agent_core.brain.stub import StubBrain  # noqa: E402
 from agent_core.config import Config, load  # noqa: E402
 from agent_core.debuglog import SessionLog  # noqa: E402
@@ -43,7 +44,7 @@ _env_loaded = False
 
 
 def _load_env() -> None:
-    """Load v2/.env (GROQ_API_KEY, TOBI_TG_TOKEN, TOBI_TG_CHAT) if present."""
+    """Load v2/.env (GROQ_API_KEY, TELEGRAM_BOT_TOKEN, TELEGRAM_USERNAME) if present."""
     global _env_loaded
     if _env_loaded:
         return
@@ -57,7 +58,9 @@ def _load_env() -> None:
 
 
 def make_brain(cfg: Config, shared: dict) -> Brain:
-    """Brain factory: 'groq' dev bridge (keyed) or the offline stub."""
+    """Brain factory: 'langchain' agent, 'groq' dev bridge (keyed) or the offline stub."""
+    if cfg.brain.type == "langchain":
+        return LangChainBrain(memory_db=cfg.brain.memory_db, store=shared["store"])
     if cfg.brain.type == "groq":
         _load_env()
         brain: Brain = GroqBrain(api_key_env=cfg.brain.api_key_env, model=cfg.brain.model,

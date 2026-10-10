@@ -29,7 +29,7 @@ completes complete, noise/silence produce nothing.
    - [ ] stay silent 90s → dormant; wake word re-activates
    - [ ] music/typing noise → no false wake, no phantom utterances
    - [ ] "what's the weather in Hyderabad" → online weather, spoken + shown
-   - [ ] "send me the summary on telegram" → message on your phone (set TOBI_TG_TOKEN/TOBI_TG_CHAT first)
+   - [ ] "send me the summary on telegram" → message on your phone (set TELEGRAM_BOT_TOKEN/TELEGRAM_USERNAME first)
    - [ ] meeting mode → purple state, segments listed → end meeting → speaker labels + summary
    - [ ] logs/session_*/events.jsonl exists for EVERY attempt (wake scores, turns, latencies)
 
