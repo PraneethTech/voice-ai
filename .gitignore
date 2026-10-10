@@ -1,0 +1,41 @@
+# Virtual environments
+.venv/
+.venv*/
+venv/
+ENV/
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Large model weights (downloaded via tools/download_models.py)
+models/
+**/models/
+vendors/
+**/vendors/
+
+# Logs & session recordings
+logs/
+**/logs/
+*.log
+*.jsonl
+*.wav
+
+# Local databases
+data/
+**/data/
+*.db
+*.sqlite3
+
+# Environment secrets
+.env
+.env.local
+
+# IDE & OS files
+.DS_Store
+Thumbs.db
+.idea/
+.claude/
+.zcode/

@@ -1,0 +1,39 @@
+# Desktop (Windows PC) profile. Schema must match pi5-4gb.yaml exactly — tests/test_config_drift.py
+server: { host: 127.0.0.1, port: 8000 }
+audio: { sample_rate: 16000, frame_ms: 32 }
+vad: { threshold: 0.5, min_silence_ms: 500, speech_pad_ms: 30, min_speech_ms: 250, barge_sustain_ms: 650, barge_prob: 0.65 }
+turn:
+  model: models/turn/smart-turn-v3.2-cpu.onnx
+  threshold: 0.65           # logs: 0.5 over-called "complete" on mid-thought pauses
+  force_after_ms: 1200      # if a turn is "incomplete" and no speech resumes, process anyway
+wake:
+  dir: models/wakeword
+  names: [hey_jarvis]        # placeholder until a trained hey_tobi model drops in this dir
+  threshold: 0.01           # E2E: any audio wakes
+  refractory_ms: 2000
+stt:
+  model_dir: models/stt-base
+  compute_type: int8
+  language: en
+  partial_every_ms: 700
+tts:
+  voice: models/tts/en_US-lessac-medium.onnx
+  gain: 1.0
+brain:
+  type: groq                   # dev bridge for E2E testing; falls back to stub without a key
+  model: openai/gpt-oss-20b    # fastest TTFT on Groq as of Oct 2026; tools + 32k ctx
+  api_key_env: GROQ_API_KEY
+greeting: "I'm listening."
+dormancy: { timeout_s: 90 }
+session: { log_dir: logs, save_utterance_audio: true }
+store: { path: data/transcripts.db }
+tools:
+  weather: { enabled: true }
+  search: { enabled: true, max_results: 3 }
+  telegram: { enabled: true, token_env: TOBI_TG_TOKEN, chat_id_env: TOBI_TG_CHAT }
+meeting:
+  diarize:
+    segmentation: models/diarize/segmentation.onnx
+    embedding: models/diarize/embedding.onnx
+    num_clusters: 0           # 0 = auto-cluster by threshold
+    threshold: 0.5

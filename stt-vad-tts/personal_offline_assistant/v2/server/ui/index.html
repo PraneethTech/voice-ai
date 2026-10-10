@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tobi v2 — offline speech to speech</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div id="start" class="overlay">
+  <div class="card">
+    <h1>tobi v2</h1>
+    <p>Fully offline speech-to-speech. Your audio stays on this machine.</p>
+    <button id="start-btn">enable microphone</button>
+    <p class="fine">The browser echo cancellation makes talk-over (barge-in) work.</p>
+  </div>
+</div>
+
+<header>
+  <span id="state-dot" class="dot"></span>
+  <span id="state">connecting…</span>
+  <span id="latency" class="chip"></span>
+  <span id="log-dir" class="chip"></span>
+</header>
+
+<main>
+  <section id="transcript-panel">
+    <h2>transcript</h2>
+    <div id="transcript"></div>
+  </section>
+  <section id="reply-panel">
+    <h2>assistant</h2>
+    <div id="reply"></div>
+    <div id="meeting-panel" style="display:none">
+      <h2>meeting</h2>
+      <div id="meeting-list"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span id="wake-hint">say "hey jarvis"</span>
+  <button id="meeting-btn">meeting mode</button>
+  <button id="mute-btn">mute</button>
+</footer>
+<script src="/app.js"></script>
+</body>
+</html>

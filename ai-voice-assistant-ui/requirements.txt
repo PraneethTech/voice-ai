@@ -1,0 +1,4 @@
+# Core runtime — every machine (laptop + Pi).
+# Hardware (GPIO button, WS2812) is optional: app runs without it, see requirements-pi.txt.
+Flask>=2.2,<4.0
+pytest>=7,<9

@@ -1,0 +1,17 @@
+# v2 vendors are nested git clones — kept on disk, NOT tracked in parent repo.
+# See VENDOR_PINS.md for pinned SHAs. Do not delete these folders.
+vendors/
+logs/*.jsonl
+logs/*.log
+__pycache__/
+*.pyc
+.venv/
+
+# local data
+data/
+
+# secrets
+.env
+
+# zcode session workspace
+.zcode/

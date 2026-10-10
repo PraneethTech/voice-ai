@@ -1,0 +1,8 @@
+# Pi-only hardware extras — install on the Raspberry Pi 5, not on laptops.
+# GPIO 5 button (gpiozero) + WS2812 pixel (Blinka/neopixel). App degrades
+# gracefully without these (read-only icons keep working, errors go to logs/span.log).
+gpiozero>=2.0,<3.0
+Adafruit-Blinka>=9.0
+Adafruit-Blinka-Raspberry-Pi5-Neopixel>=1.0.0rc2
+adafruit-circuitpython-neopixel>=6.4
+rpi-ws281x>=5.0

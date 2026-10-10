@@ -1,0 +1,10 @@
+{
+  "python.analysis.extraPaths": [
+    "./stt-vad-tts/personal_offline_assistant/v2",
+    "./ai-voice-assistant-ui"
+  ],
+  "python.autoComplete.extraPaths": [
+    "./stt-vad-tts/personal_offline_assistant/v2",
+    "./ai-voice-assistant-ui"
+  ]
+}

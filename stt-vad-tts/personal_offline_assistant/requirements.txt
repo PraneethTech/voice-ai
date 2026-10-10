@@ -1,0 +1,57 @@
+# ==============================================================================
+# v2 — Sovereign Personal AI Companion (v2 runtime)
+# Run:  .venv\Scripts\python.exe -m uvicorn v2.app:app --host 127.0.0.1 --port 8011
+# Dev:  Windows 11   |   Target: Raspberry Pi 5 4GB (aarch64)
+#
+# v2 is deliberately torch-free: SmartTurn's log-mel front-end is vendored
+# numpy code (v2/whisper_features.py), so nothing here pulls a deep-learning
+# framework. Measured on this box: cold import 0.6s / 54 MB RSS total.
+# Everything below has an aarch64 Linux wheel — no build step on the Pi.
+#
+# v1 deps live in requirements-v1.txt (web_app.py / app_streamlit.py only).
+# ==============================================================================
+
+# --- 1. Audio I/O (mic capture + speaker playback) ---
+sounddevice>=0.5            # both directions, 16kHz mono int16.
+                             #   Pi/Debian: sudo apt install portaudio19-dev
+                             #   Windows:   bundled in the wheel
+numpy>=1.26
+
+# --- 2. Neural audio, local ONNX, no framework ---
+onnxruntime>=1.16            # CPUExecutionProvider. Silero VAD v5 + SmartTurn v3.2.
+                             # Whole speech stack is ~19MB of ONNX.
+
+# --- 3. Speech engines ---
+cactus-needle[mic]>=3.1.2    # Whistle STT, English scope (model covers 7 langs,
+                             # we pin en). 16.9MB .cact. Ships
+                             # manylinux2014_aarch64 + musllinux_1_2_aarch64
+                             # wheels — no build step on the Pi.
+piper-tts>=1.2               # TTS, English-only scope. Voice downloads once into
+                             # models/piper/, then fully offline (en_US-ryan-high).
+openwakeword>=0.6.0          # Wake word (DORMANT gate). Reuses onnxruntime.
+                             # pip pulls scikit-learn+scipy (training-only, never
+                             # imported at runtime). Models vendored once into
+                             # models/openwakeword/ — fully offline after that.
+
+# --- 4. Web testbed (server captures the mic; browser only displays) ---
+fastapi>=0.110
+uvicorn>=0.29                # WebSocket support needs websockets OR wsproto
+websockets>=12.0             # uvicorn's default WS implementation
+
+# --- 5. Tests ---
+pytest>=8.0                  # .venv\Scripts\python.exe -m pytest tests/ -q
+
+# --- 6. Deliberately NOT required by v2 ---
+# torch / transformers    # cost 4.9s import + 199MB RSS and dragged torch in.
+#                         # Only SmartTurn's log-mel needed them, now vendored.
+# google-genai            # v1 Gemini path. v2 replies are a fixed string.
+# faster-whisper / sherpa-onnx / ctranslate2   # v1 STT; v2 uses Whistle.
+# streamlit               # v1 UI; v2 is FastAPI.
+# scipy / pandas / pyarrow / matplotlib        # pulled in by torch, all unused.
+#
+# --- 7. One-time model fetch (not pip; needs network ONCE, then offline) ---
+#   models/silero_vad.onnx          https://huggingface.co/csukuangfj/vad/resolve/main/silero_vad_v5.onnx
+#   models/smart-turn-v3.2-cpu.onnx https://huggingface.co/pipecat-ai/smart-turn-v3/resolve/main/smart-turn-v3.2-cpu.onnx
+#   whistle.cact (16.9MB) + engine  fetched by cactus-needle on first import
+#   Piper voices                    fetched by piper on first synthesis
+# After that the Pi needs no network at all.

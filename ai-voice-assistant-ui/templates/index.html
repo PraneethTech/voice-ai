@@ -1,0 +1,69 @@
+<!doctype html>
+<!-- SPAN build v6: if a screen does not show v5 in its tab title, it runs stale files -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f4f6fa">
+  <title>SPAN v6</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v='6') }}">
+</head>
+<body>
+  <div class="device" id="device">
+    <div class="led-bar" aria-hidden="true"></div>
+    <main class="screen" id="screen" data-s="idle" aria-label="SPAN screen">
+      <header class="status">
+        <span class="state" id="stateLabel" aria-live="polite">Ready</span>
+        <span class="brand-top" aria-hidden="true">SPAN</span>
+        <div class="icons">
+          <svg id="wifi" class="ic wifi off" viewBox="0 0 16 12" role="img" aria-label="Wi-Fi off"><path d="M8 11.2 1 4a10 10 0 0 1 14 0z"/></svg>
+          <span id="mic" class="mic" role="img" aria-label="Microphone on">
+            <svg class="ic" viewBox="0 0 12 14" aria-hidden="true"><rect class="mic-body" x="3.5" y="1" width="5" height="8" rx="2.5"/><path class="mic-arc" d="M1.5 6.5a4.5 4.5 0 0 0 9 0M6 11v2"/><path class="mic-slash" d="M1 1l10 12"/></svg>
+          </span>
+        </div>
+      </header>
+
+      <!-- Default voice screen. The chat appears only after a wake-word event. -->
+      <section class="voiceview" id="voiceview" aria-label="Voice standby">
+        <span class="voice-orb" aria-hidden="true"></span>
+        <strong id="voiceTitle">Ready</strong>
+        <span id="voiceSub">Say “Hey Jarvis”</span>
+      </section>
+
+      <!-- Conversation view (wake word) -->
+      <section class="chat" id="chat" role="log" aria-live="polite" aria-label="Conversation">
+        <div class="empty" id="empty">
+          <span class="ring" aria-hidden="true"></span>
+          <strong class="brand">SPAN</strong>
+          <small id="emptySub">Ready</small>
+        </div>
+      </section>
+
+      <!-- Recording view (push switch / recording mode) -->
+      <section class="recview" id="recview" aria-label="Recording">
+        <div class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <strong class="rec-title">Recording…</strong>
+        <span class="rec-clock" id="recClock">00:00</span>
+        <div class="rec-card" id="recCard" aria-live="polite"><span class="hint">Listening for speech…</span></div>
+      </section>
+
+      <!-- Fixed loader row -->
+      <footer class="loader" id="loader">
+        <span class="viz" aria-hidden="true">
+          <span class="bars"><i></i><i></i><i></i><i></i><i></i></span>
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="tool-spin">
+            <svg viewBox="0 0 16 16"><path d="M8 0a8 8 0 0 1 8 8h-2a6 6 0 0 0-6-6V0zm0 16a8 8 0 0 1-8-8h2a6 6 0 0 0 6 6v2z"/></svg>
+          </span>
+          <span class="mute-ic">
+            <svg viewBox="0 0 12 14"><rect x="3.5" y="1" width="5" height="8" rx="2.5"/><path d="M1.5 6.5a4.5 4.5 0 0 0 9 0M6 11v2M1 1l10 12"/></svg>
+          </span>
+        </span>
+        <span id="loaderText">Waiting for wake word</span>
+      </footer>
+    </main>
+    <div class="grille" aria-hidden="true"></div>
+  </div>
+  <script src="{{ url_for('static', filename='app.js', v='6') }}"></script>
+</body>
+</html>

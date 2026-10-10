@@ -1,0 +1,29 @@
+# ==============================================================================
+# v1 (repo root) — kept so web_app.py / app_streamlit.py keep working.
+# v2 does NOT need any of this; see requirements.txt for the v2 runtime.
+# ==============================================================================
+
+numpy>=1.26
+scipy>=1.11
+sounddevice>=0.4.6
+onnxruntime>=1.16
+python-dotenv>=1.0
+
+# LLM (v1 Gemini path — being replaced by a local SLM)
+google-genai>=2.0.0
+transformers>=4.40
+torch>=2.2
+
+# v1 speech engines
+sherpa-onnx>=1.10
+faster-whisper>=1.0
+piper-tts>=1.2
+
+# v1 UIs + tests
+streamlit>=1.32
+fastapi>=0.110
+uvicorn>=0.29
+ipykernel>=6.0
+ipywidgets>=8.0
+pytest>=8.0
+pytest-asyncio>=0.23

@@ -1,0 +1,39 @@
+# Raspberry Pi 5 4GB profile. Schema must match desktop.yaml exactly — tests/test_config_drift.py
+server: { host: 0.0.0.0, port: 8000 }
+audio: { sample_rate: 16000, frame_ms: 32 }
+vad: { threshold: 0.5, min_silence_ms: 500, speech_pad_ms: 30, min_speech_ms: 250, barge_sustain_ms: 800, barge_prob: 0.70 }
+turn:
+  model: models/turn/smart-turn-v3.2-cpu.onnx
+  threshold: 0.65           # wait longer before calling a pause "done" (matches desktop)
+  force_after_ms: 1500
+wake:
+  dir: models/wakeword
+  names: [hey_jarvis]
+  threshold: 0.45            # noisier demo hall: stricter than desktop to avoid false wakes
+  refractory_ms: 2000
+stt:
+  model_dir: models/stt-tiny
+  compute_type: int8
+  language: en
+  partial_every_ms: 1200     # Pi CPU: fewer partial passes than desktop
+tts:
+  voice: models/tts/en_US-lessac-low.onnx
+  gain: 1.0
+brain:
+  type: stub                   # sovereign default on the Pi; swap to 'llm' (llama.cpp) later
+  model: ""
+  api_key_env: GROQ_API_KEY
+greeting: "I'm listening."
+dormancy: { timeout_s: 90 }
+session: { log_dir: logs, save_utterance_audio: true }
+store: { path: data/transcripts.db }
+tools:
+  weather: { enabled: true }
+  search: { enabled: true, max_results: 3 }
+  telegram: { enabled: true, token_env: TOBI_TG_TOKEN, chat_id_env: TOBI_TG_CHAT }
+meeting:
+  diarize:
+    segmentation: models/diarize/segmentation.onnx
+    embedding: models/diarize/embedding.onnx
+    num_clusters: 0
+    threshold: 0.5
