@@ -134,6 +134,29 @@ class Store:
 
     # ------------------------------------------------------------ summaries
 
+    def recent_by_minutes(self, minutes: float, limit: int = 200) -> list[dict]:
+        """Return utterances whose wall-clock time falls within the last `minutes` minutes.
+
+        Wall-clock = sessions.started_at (ISO string stored as TEXT) +
+        utterances.t_ms / 1000 seconds. SQLite's datetime() arithmetic handles this.
+        """
+        rows = self.conn.execute(
+            """
+            SELECT u.id, u.session_id, u.t_ms, u.role, u.speaker, u.text, u.lang,
+                   datetime(s.started_at, '+' || CAST(u.t_ms / 1000 AS TEXT) || ' seconds') AS wall_time
+            FROM utterances u
+            JOIN sessions s ON s.id = u.session_id
+            WHERE datetime(s.started_at, '+' || CAST(u.t_ms / 1000 AS TEXT) || ' seconds')
+                  >= datetime('now', '-' || ? || ' minutes')
+            ORDER BY u.id DESC LIMIT ?
+            """,
+            (str(int(minutes)), limit),
+        ).fetchall()
+        cols = ("id", "session_id", "t_ms", "role", "speaker", "text", "lang", "wall_time")
+        result = [dict(zip(cols, r)) for r in rows]
+        result.reverse()  # chronological order
+        return result
+
     def recent(self, session_id: int | None = None, limit: int = 50) -> list[dict]:
         if session_id is None:
             rows = self.conn.execute(

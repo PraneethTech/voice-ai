@@ -80,9 +80,11 @@ class TtsCfg:
 
 @dataclass(frozen=True)
 class BrainCfg:
-    type: str                       # 'stub' | 'groq' (dev bridge) | later 'llm'
+    type: str                       # 'stub' | 'groq' (dev bridge) | 'langchain'
     model: str = "llama-3.3-70b-versatile"
-    api_key_env: str = "GROQ_API_KEY"
+    api_key_env: str = "LLM_API_KEY"
+    base_url: str = "http://127.0.0.1:8080/v1"   # local llama.cpp / LFM2.5 endpoint
+    memory_db: str = "agent_memory.db"            # SQLite path for LangGraph checkpointer
 
 
 @dataclass(frozen=True)
